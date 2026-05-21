@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作物情報ダッシュボード｜農家のための1stopデータポータル</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2d6a2d;
+      --green-light: #4a8c3f;
+      --green-pale: #e8f2e4;
+      --amber: #c97d12;
+      --amber-pale: #fef6e4;
+      --gray-dark: #222;
+      --gray-mid: #555;
+      --gray-light: #888;
+      --border: #d8d8d8;
+      --bg: #fff;
+      --radius: 8px;
+      --shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--gray-dark);
+      background: var(--bg);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ============ HEADER ============ */
+    header {
+      background: var(--green);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .logo span { color: #a8d5a2; font-weight: 400; font-size: .85rem; display: block; }
+    .header-btn {
+      background: #fff;
+      color: var(--green);
+      border: none;
+      border-radius: var(--radius);
+      padding: 8px 20px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .header-btn:hover { background: #e8f2e4; }
+
+    /* ============ HERO ============ */
+    .hero {
+      background: linear-gradient(135deg, #1e4d1e 0%, #2d6a2d 50%, #3a7d34 100%);
+      color: #fff;
+      padding: 64px 24px 72px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: .85rem;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.35;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: #a8d5a2;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      opacity: .9;
+      max-width: 520px;
+      margin: 0 auto 32px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: #fff;
+      color: var(--green);
+      border: none;
+      border-radius: var(--radius);
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--green-pale); }
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.5);
+      border-radius: var(--radius);
+      padding: 12px 24px;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+    .hero-note { margin-top: 20px; font-size: .82rem; opacity: .7; }
+
+    /* ============ MAIN CONTAINER ============ */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* ============ SECTION ============ */
+    section { padding: 56px 0; }
+    section + section { border-top: 1px solid var(--border); }
+    .section-label {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--green-light);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      color: var(--gray-mid);
+      margin-bottom: 36px;
+      max-width: 600px;
+    }
+
+    /* ============ DASHBOARD PREVIEW ============ */
+    .dashboard {
+      background: #f4f6f4;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      box-shadow: var(--shadow);
+    }
+    .dash-header {
+      background: var(--green);
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .dash-crop {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .dash-meta { font-size: .82rem; opacity: .8; }
+    .dash-update { margin-left: auto; font-size: .78rem; opacity: .7; }
+    .dash-tabs {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+    }
+    .dash-tab {
+      padding: 12px 20px;
+      font-size: .9rem;
+      color: var(--gray-mid);
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+    }
+    .dash-tab.active {
+      color: var(--green);
+      font-weight: 700;
+      border-bottom-color: var(--green);
+    }
+    .dash-body { padding: 20px; display: grid; gap: 16px; }
+
+    /* Today card */
+    .today-card {
+      background: var(--amber-pale);
+      border: 1px solid #f0d080;
+      border-left: 4px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .today-card h3 { font-size: .85rem; font-weight: 700; color: var(--amber); margin-bottom: 10px; }
+    .today-row { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; font-size: .95rem; }
+    .today-row strong { min-width: 72px; font-size: .82rem; color: var(--gray-mid); }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: .78rem; font-weight: 700; }
+    .badge-warn { background: #fee2e2; color: #b91c1c; }
+    .badge-ok { background: #d1fae5; color: #065f46; }
+    .badge-info { background: #dbeafe; color: #1e40af; }
+
+    /* Cards grid */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .card-title {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--gray-mid);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title .icon { font-size: 1rem; }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 5px 0;
+      font-size: .9rem;
+    }
+    .price-row + .price-row { border-top: 1px solid #f0f0f0; }
+    .price-val { font-weight: 700; font-size: 1.05rem; }
+    .price-up { color: #dc2626; }
+    .price-dn { color: #2563eb; }
+    .mini-bar {
+      height: 6px;
+      background: #e8f2e4;
+      border-radius: 3px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .mini-bar-fill { height: 100%; background: var(--green-light); border-radius: 3px; }
+    .pest-item { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; font-size: .88rem; }
+    .pest-item + .pest-item { border-top: 1px solid #f0f0f0; }
+    .pest-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #22c55e; }
+    .weather-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: .88rem; }
+    .weather-row + .weather-row { border-top: 1px solid #f0f0f0; }
+
+    /* ============ FEATURES ============ */
+    .features { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .feature {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .feature-icon {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .feature h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .feature p { font-size: .88rem; color: var(--gray-mid); line-height: 1.6; }
+
+    /* ============ ONBOARDING ============ */
+    .onboard-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .onboard-step {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--green-pale);
+      border-radius: var(--radius);
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      margin: 0 auto 12px;
+    }
+    .onboard-step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .onboard-step p { font-size: .85rem; color: var(--gray-mid); }
+    .onboard-note {
+      margin-top: 24px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: .88rem;
+      color: var(--gray-mid);
+    }
+    .onboard-note strong { color: var(--gray-dark); }
+
+    /* ============ DIFFERENCE ============ */
+    .diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+    .diff-table th {
+      background: #f4f4f4;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: .82rem;
+      color: var(--gray-mid);
+      border-bottom: 2px solid var(--border);
+    }
+    .diff-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .diff-table tr:hover td { background: #fafafa; }
+    .ours { color: var(--green); font-weight: 700; }
+    .check { color: var(--green); font-weight: 700; }
+    .cross { color: #aaa; }
+
+    /* ============ FREE BANNER ============ */
+    .free-banner {
+      background: var(--green);
+      color: #fff;
+      border-radius: 12px;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .free-banner h2 { font-size: clamp(1.3rem, 4vw, 1.8rem); margin-bottom: 12px; }
+    .free-banner p { opacity: .85; margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .free-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 14px;
+      font-size: .85rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .form-inline { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+    .form-inline select, .form-inline input {
+      padding: 11px 14px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: .95rem;
+      min-width: 160px;
+    }
+    .form-inline select:focus, .form-inline input:focus { outline: 2px solid var(--amber); }
+    .form-btn {
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 11px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .form-btn:hover { background: #b56d0f; }
+
+    /* ============ TRUST ============ */
+    .trust-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      flex: 1 1 240px;
+    }
+    .trust-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .trust-item h4 { font-size: .95rem; font-weight: 700; margin-bottom: 2px; }
+    .trust-item p { font-size: .85rem; color: var(--gray-mid); }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: #1a1a1a;
+      color: #aaa;
+      padding: 40px 24px 32px;
+      text-align: center;
+      font-size: .85rem;
+    }
+    footer p { margin-top: 8px; }
+    .footer-logo { color: #e8f2e4; font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 600px) {
+      section { padding: 40px 0; }
+      .hero { padding: 48px 20px 56px; }
+      .diff-table { font-size: .82rem; }
+      .diff-table th, .diff-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    作物情報ダッシュボード
+    <span>農家のための1stopデータポータル</span>
+  </div>
+  <button class="header-btn" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">無料で使う</button>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">生産者向け 無料サービス</div>
+  <h1>あなたの<em>作物と地域</em>に必要な<br>情報が、1画面に揃う</h1>
+  <p>価格・気象・病害虫・農薬登録・品種情報を毎日自動更新。<br>きゅうり農家なら「きゅうり」だけを登録すれば、あとは全部自動。</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">今すぐ無料で始める</button>
+    <button class="btn-ghost" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">画面を見る</button>
+  </div>
+  <p class="hero-note">クレジットカード不要・登録3項目だけ</p>
+</div>
+
+<!-- DASHBOARD PREVIEW -->
+<section id="dashboard">
+  <div class="container">
+    <div class="section-label">ダッシュボード</div>
+    <h2 class="section-title">朝5分で当日の判断が終わる</h2>
+    <p class="section-sub">価格・気象・病害虫・農薬の最新情報が1画面に。変化があった項目はアラート表示。</p>
+
+    <div class="dashboard">
+      <div class="dash-header">
+        <div class="dash-crop">きゅうり</div>
+        <div class="dash-meta">茨城県つくば市｜露地栽培</div>
+        <div class="dash-update">更新: 5月21日 5:00</div>
+      </div>
+      <div class="dash-tabs">
+        <div class="dash-tab active">ダッシュボード</div>
+        <div class="dash-tab">動画</div>
+        <div class="dash-tab">農薬</div>
+        <div class="dash-tab">品種</div>
+      </div>
+      <div class="dash-body">
+
+        <!-- Today card -->
+        <div class="today-card">
+          <h3>今日のサマリー</h3>
+          <div class="today-row"><strong>出荷価格</strong>大田市場 210円/kg &nbsp;<span class="badge badge-info">前日比 +8円</span></div>
+          <div class="today-row"><strong>病害虫</strong><span class="badge badge-warn">べと病 注意報（茨城県）</span></div>
+          <div class="today-row"><strong>気象</strong>曇り・湿度83%・高温注意 &nbsp;<span class="badge badge-warn">病害リスク 高</span></div>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards">
+          <!-- Price -->
+          <div class="card">
+            <div class="card-title"><span class="icon">📊</span>中央卸売市場 単価（円/kg）</div>
+            <div class="price-row"><span>大田市場</span><span class="price-val price-up">210 ▲</span></div>
+            <div class="price-row"><span>豊洲市場</span><span class="price-val">198</span></div>
+            <div class="price-row"><span>大阪中央</span><span class="price-val price-dn">185 ▼</span></div>
+            <div class="price-row"><span>仙台市場</span><span class="price-val">204</span></div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:72%"></div></div>
+            <div style="font-size:.75rem; color:var(--gray-light); margin-top:4px;">過去6ヶ月平均比 +12%</div>
+          </div>
+
+          <!-- Weather -->
+          <div class="card">
+            <div class="card-title"><span class="icon">🌤</span>気象（AMeDAS つくば）</div>
+            <div class="weather-row"><span>気温</span><strong>24.8℃</strong><span style="font-size:.78rem;color:var(--gray-light)">平年+2.1℃</span></div>
+            <div class="weather-row"><span>湿度</span><strong style="color:#dc2626">83%</strong><span style="font-size:.78rem;color:#dc2626">高め</span></div>
+            <div class="weather-row"><span>日照</span><strong>3.2時間</strong><span style="font-size:.78rem;color:var(--gray-light)">平年−1.4h</span></div>
+            <div class="weather-row"><span>降水</span><strong>0.0mm</strong><span></span></div>
+            <div class="mini-bar" style="background:#fee2e2;"><div class="mini-bar-fill" style="width:83%;background:#ef4444"></div></div>
+            <div style="font-size:.75rem; color:#dc2626; margin-top:4px;">湿度ベース病害リスク：高</div>
+          </div>
+
+          <!-- Pest -->
+          <div class="card">
+            <div class="card-title"><span class="icon">🐛</span>病害虫発生予察（茨城県）</div>
+            <div class="pest-item"><div class="pest-dot dot-red"></div><div><strong>べと病</strong>　注意報 5/20発令<br><span style="font-size:.78rem;color:var(--gray-light)">露地きゅうり対象</span></div></div>
+            <div class="pest-item"><div class="pest-dot dot-yellow"></div><div><strong>ウリハムシ</strong>　発生注意<br><span style="font-size:.78rem;color:var(--gray-light)">平年より10日早い</span></div></div>
+            <div class="pest-item"><div class="pest-dot dot-green"></div><div><strong>うどんこ病</strong>　平年並み<br><span style="font-size:.78rem;color:var(--gray-light)">経過観察</span></div></div>
+          </div>
+
+          <!-- Pesticide alert -->
+          <div class="card">
+            <div class="card-title"><span class="icon">🧪</span>登録農薬 最新情報</div>
+            <div class="pest-item"><div class="pest-dot dot-green"></div><div><strong>適用拡大</strong>　5/15<br><span style="font-size:.78rem;color:var(--gray-light)">〇〇水和剤 べと病に追加</span></div></div>
+            <div class="pest-item"><div class="pest-dot dot-yellow"></div><div><strong>失効予告</strong>　6/30<br><span style="font-size:.78rem;color:var(--gray-light)">△△乳剤 在庫確認を</span></div></div>
+            <div style="font-size:.75rem; color:var(--gray-light); margin-top:10px;">出典: FAMIC農薬登録情報提供システム</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="container">
+    <div class="section-label">機能</div>
+    <h2 class="section-title">必要な情報をすべてカバー</h2>
+    <p class="section-sub">公式データベースに直結。AIによる書き換えなし。原データをそのまま整理して届けます。</p>
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">📊</span>
+        <h3>市場価格</h3>
+        <p>全国の中央卸売市場の日次単価と過去6ヶ月推移を比較。出荷先の判断に。</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🌤</span>
+        <h3>気象データ</h3>
+        <p>AMeDASの観測値と平年比を毎日更新。湿度ベースの病害リスク指標付き。</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🐛</span>
+        <h3>病害虫発生予察</h3>
+        <p>都道府県病害虫防除所の発生予察情報を自動収集。あなたの地域・作型でフィルタ。</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🧪</span>
+        <h3>農薬登録情報</h3>
+        <p>FAMIC公式DBから直接取込み。適用拡大・新規登録・失効を時系列で確認。AIは介在しない。</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🌱</span>
+        <h3>主要品種情報</h3>
+        <p>あなたの作型に適した品種を農研機構DBから抜粋。品種選びの参考に。</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📹</span>
+        <h3>動画キュレーション</h3>
+        <p>JA・普及センター・種苗会社公式などの信頼チャンネルに限定。AI要約3行付き。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ONBOARDING -->
+<section style="background:#f9faf9;">
+  <div class="container">
+    <div class="section-label">はじめ方</div>
+    <h2 class="section-title">登録は3項目だけ。あとは自動</h2>
+    <p class="section-sub">地域・作物・作型を入力するだけで、最寄りの市場・気象観測点・発生予察情報が自動でマッピングされます。</p>
+    <div class="onboard-steps">
+      <div class="onboard-step">
+        <div class="step-num">1</div>
+        <h3>地域を選ぶ</h3>
+        <p>都道府県・市区町村<br>（例：茨城県つくば市）</p>
+      </div>
+      <div class="onboard-step">
+        <div class="step-num">2</div>
+        <h3>作物を選ぶ</h3>
+        <p>作物名を入力<br>（例：きゅうり）</p>
+      </div>
+      <div class="onboard-step">
+        <div class="step-num">3</div>
+        <h3>作型を選ぶ</h3>
+        <p>露地 / 施設（ハウス）<br>/ 水耕など</p>
+      </div>
+    </div>
+    <div class="onboard-note">
+      <strong>品種・使用農薬・出荷市場の入力は不要です。</strong>
+      地域から最寄りの中央卸売市場とAMeDAS観測点を自動推定します。設定はあとから変更できます。
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section>
+  <div class="container">
+    <div class="section-label">比較</div>
+    <h2 class="section-title">他のサービスとの違い</h2>
+    <p class="section-sub">作物別のリアルタイムデータ統合という点で、既存の農業メディアや管理ツールとは異なります。</p>
+    <div style="overflow-x:auto;">
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>サービス</th>
+            <th>リアルタイム価格</th>
+            <th>発生予察</th>
+            <th>農薬登録</th>
+            <th>作物別統合</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ours">作物情報ダッシュボード</td>
+            <td class="check">◎</td>
+            <td class="check">◎</td>
+            <td class="check">◎</td>
+            <td class="check">◎</td>
+          </tr>
+          <tr>
+            <td>農業メディア各社</td>
+            <td class="cross">△ 記事のみ</td>
+            <td class="cross">✕</td>
+            <td class="cross">✕</td>
+            <td class="cross">✕</td>
+          </tr>
+          <tr>
+            <td>圃場管理アプリ</td>
+            <td class="cross">✕</td>
+            <td class="cross">△</td>
+            <td class="cross">✕</td>
+            <td class="cross">△ 個人記録のみ</td>
+          </tr>
+          <tr>
+            <td>各機関の公式サイト</td>
+            <td class="cross">◎ 個別</td>
+            <td class="cross">◎ 個別</td>
+            <td class="cross">◎ 個別</td>
+            <td class="cross">✕ バラバラ</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section>
+  <div class="container">
+    <div class="section-label">信頼性</div>
+    <h2 class="section-title">公式データだけを使う</h2>
+    <p class="section-sub">農薬情報のAI生成は行いません。FAMIC・農水省・気象庁などの公式データを直接取り込み、出典を明記します。</p>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">🏛️</div>
+        <div>
+          <h4>FAMIC農薬登録DB直結</h4>
+          <p>農薬情報はAIで生成しません。法令違反・健康被害につながる誤情報を出さないための設計です。</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🌦️</div>
+        <div>
+          <h4>気象庁 / AMeDAS</h4>
+          <p>気象データは気象庁オープンデータAPIから直接取得。観測点との距離も明示します。</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔗</div>
+        <div>
+          <h4>全データに出典明示</h4>
+          <p>どの情報がどこから来ているか、原データへのリンクを必ず掲載します。</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">📹</div>
+        <div>
+          <h4>動画はホワイトリスト方式</h4>
+          <p>JA系・普及センター・種苗会社公式・認定農家チャンネルのみを対象。野良動画は収集しません。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER CTA -->
+<section id="register">
+  <div class="container">
+    <div class="free-banner">
+      <div class="free-badge">生産者は永久無料</div>
+      <h2>今すぐ使い始める</h2>
+      <p>まずはきゅうり・茨城から。1作物・1地域に完全特化してスタートします。</p>
+      <form class="form-inline" onsubmit="handleRegister(event)">
+        <select>
+          <option value="">都道府県を選択</option>
+          <option>茨城県</option>
+          <option>千葉県</option>
+          <option>群馬県</option>
+          <option>宮崎県</option>
+          <option>高知県</option>
+        </select>
+        <select>
+          <option value="">作物を選択</option>
+          <option>きゅうり（先行対応）</option>
+        </select>
+        <button type="submit" class="form-btn">無料で登録する</button>
+      </form>
+      <p style="font-size:.8rem;opacity:.7;margin-top:16px;">クレジットカード不要。メールアドレスのみで登録できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">作物情報ダッシュボード</div>
+  <p>農家のための1stopデータポータル｜生産者は永久無料</p>
+  <p style="margin-top:16px; font-size:.78rem;">データ出典：気象庁・FAMIC・農水省・農研機構・各都道府県病害虫防除所</p>
+</footer>
+
+<script>
+  function handleRegister(e) {
+    e.preventDefault();
+    alert('ご登録ありがとうございます。\nサービス開始時にメールでお知らせします。\n（現在 先行登録受付中）');
+  }
+
+  // Tab switching demo
+  document.querySelectorAll('.dash-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
