@@ -487,6 +487,166 @@
     }
     .form-btn:hover { background: #b56d0f; }
 
+    /* ============ DETAIL LINKS & CARD FOOTER ============ */
+    .card-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .detail-link {
+      background: none;
+      border: none;
+      color: var(--green);
+      font-size: .83rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .detail-link:hover { text-decoration: underline; }
+    .action-detail-link {
+      background: none;
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 4px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 3px 10px;
+      font-family: inherit;
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .action-detail-link:hover { background: var(--green-pale); }
+
+    /* ============ MODAL ============ */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      align-items: flex-end;
+    }
+    .modal.open { display: flex; }
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+    }
+    .modal-sheet {
+      position: relative;
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      max-height: 82vh;
+      overflow-y: auto;
+      box-shadow: 0 -4px 24px rgba(0,0,0,.15);
+    }
+    .modal-header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1;
+    }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; }
+    .modal-header .modal-sub { font-size: .78rem; color: var(--gray-light); margin-top: 2px; }
+    .modal-close {
+      background: #f0f0f0;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: #e0e0e0; }
+    .modal-body { padding: 20px; }
+    .modal-section { margin-bottom: 24px; }
+    .modal-section-title {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--gray-mid);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    .detail-table th {
+      background: #f8f8f8;
+      text-align: left;
+      padding: 7px 10px;
+      font-size: .78rem;
+      color: var(--gray-mid);
+      border-bottom: 2px solid var(--border);
+    }
+    .detail-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-source {
+      font-size: .75rem;
+      color: var(--gray-light);
+      margin-top: 8px;
+    }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+    .risk-hi  { background: #fee2e2; color: #b91c1c; }
+    .risk-mid { background: #fef9c3; color: #854d0e; }
+    .risk-lo  { background: #d1fae5; color: #065f46; }
+    .pest-detail-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .pest-detail-head {
+      background: #f8f8f8;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: .92rem;
+    }
+    .pest-detail-body {
+      padding: 12px 14px;
+      font-size: .87rem;
+      line-height: 1.6;
+    }
+    .pest-detail-body dt {
+      font-weight: 700;
+      color: var(--gray-mid);
+      font-size: .78rem;
+      margin-top: 8px;
+    }
+    .pest-detail-body dd { margin: 2px 0 0; }
+
     /* ============ TRUST ============ */
     .trust-grid { display: flex; flex-wrap: wrap; gap: 16px; }
     .trust-item {
@@ -574,6 +734,7 @@
             <div class="action-body">
               <strong>べと病注意報 × 湿度83% → 今日中に防除薬を散布</strong>
               <span>茨城県 5/20発令・露地きゅうり対象。午後から雨予報のため午前中に作業を。<br>推奨：ランマンフロアブル（べと病 登録あり・前回散布から14日以上経過の場合）</span>
+              <br><button class="action-detail-link" onclick="openModal('modal-pest')">病害虫の詳細・推奨農薬を見る →</button>
             </div>
           </div>
           <div class="action-item">
@@ -581,6 +742,7 @@
             <div class="action-body">
               <strong>午後13時から雨 → 収穫・出荷作業は午前中に完了を</strong>
               <span>明日も曇りで日照不足が続く予報。収穫は今日の午前中が適期。</span>
+              <br><button class="action-detail-link" onclick="openModal('modal-weather')">7日間予報・病害リスクを見る →</button>
             </div>
           </div>
           <div class="action-item">
@@ -588,6 +750,7 @@
             <div class="action-body">
               <strong>大田市場 210円/kg（今週最高値）→ 出荷量を増やすか検討</strong>
               <span>先週比+18円。今週は高め推移が続いている。在庫量と相談を。</span>
+              <br><button class="action-detail-link" onclick="openModal('modal-price')">全国市場の価格推移を見る →</button>
             </div>
           </div>
         </div>
@@ -612,6 +775,9 @@
             </div>
             <div class="spark-labels"><span>7日前</span><span>今日</span></div>
             <div style="font-size:.75rem; color:var(--gray-light); margin-top:4px;">大田市場 過去6ヶ月平均比 +12%</div>
+            <div class="card-footer">
+              <button class="detail-link" onclick="openModal('modal-price')">全国市場・価格推移の詳細 →</button>
+            </div>
           </div>
 
           <!-- Weather -->
@@ -641,6 +807,9 @@
                 <div class="f-rain" style="color:var(--gray-light)">晴れ</div>
               </div>
             </div>
+            <div class="card-footer">
+              <button class="detail-link" onclick="openModal('modal-weather')">7日間予報・病害リスクの詳細 →</button>
+            </div>
           </div>
 
           <!-- Pest -->
@@ -668,26 +837,9 @@
                 <span style="font-size:.78rem;color:var(--gray-light)">経過観察</span>
               </div>
             </div>
-          </div>
-
-          <!-- Pesticide alert -->
-          <div class="card">
-            <div class="card-title"><span class="icon">🧪</span>農薬登録 最新情報</div>
-            <div class="pest-item">
-              <div class="pest-dot dot-green"></div>
-              <div>
-                <strong>適用拡大</strong>　5/15 登録<br>
-                <span style="font-size:.78rem;color:var(--gray-light)">フェスティバルC水和剤 べと病に追加<br>登録番号 第〇〇〇〇〇号</span>
-              </div>
+            <div class="card-footer">
+              <button class="detail-link" onclick="openModal('modal-pest')">各病害の詳細・推奨農薬を見る →</button>
             </div>
-            <div class="pest-item">
-              <div class="pest-dot dot-yellow"></div>
-              <div>
-                <strong>失効予告</strong>　6/30<br>
-                <span style="font-size:.78rem;color:var(--gray-light)">サンマイト水和剤 登録失効予定<br>在庫の使い切りを確認</span>
-              </div>
-            </div>
-            <div style="font-size:.75rem; color:var(--gray-light); margin-top:10px;">出典: FAMIC 農薬登録情報提供システム</div>
           </div>
         </div>
 
@@ -907,6 +1059,237 @@
   </div>
 </section>
 
+<!-- ===== MODAL: 価格詳細 ===== -->
+<div class="modal" id="modal-price">
+  <div class="modal-overlay" onclick="closeModal('modal-price')"></div>
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div>
+        <h3>📊 市場価格 詳細 — きゅうり</h3>
+        <div class="modal-sub">出典: 農水省 青果物卸売市場調査 / 各市場日報</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-price')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">本日の全国主要市場（5月21日）</div>
+        <table class="detail-table">
+          <thead><tr><th>市場</th><th>単価（円/kg）</th><th>前日比</th><th>取引量</th></tr></thead>
+          <tbody>
+            <tr><td><strong>大田市場</strong></td><td><strong style="color:#dc2626">210</strong></td><td style="color:#dc2626">▲ +8</td><td>1,840箱</td></tr>
+            <tr><td>豊洲市場</td><td>198</td><td style="color:#dc2626">▲ +2</td><td>620箱</td></tr>
+            <tr><td>大阪中央</td><td>185</td><td style="color:#2563eb">▼ −5</td><td>2,100箱</td></tr>
+            <tr><td>仙台中央</td><td>204</td><td style="color:#dc2626">▲ +4</td><td>380箱</td></tr>
+            <tr><td>名古屋北部</td><td>196</td><td>± 0</td><td>450箱</td></tr>
+            <tr><td>福岡中央</td><td>188</td><td style="color:#dc2626">▲ +6</td><td>310箱</td></tr>
+          </tbody>
+        </table>
+        <div class="detail-source">※ 1箱 = 5kg換算。取引量は概数。</div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">大田市場 過去7日間の推移</div>
+        <table class="detail-table">
+          <thead><tr><th>日付</th><th>単価（円/kg）</th><th>前日比</th><th>取引量</th></tr></thead>
+          <tbody>
+            <tr style="background:#f0f8f0"><td><strong>5/21（今日）</strong></td><td><strong>210</strong></td><td style="color:#dc2626">▲ +8</td><td>1,840箱</td></tr>
+            <tr><td>5/20（火）</td><td>202</td><td style="color:#dc2626">▲ +4</td><td>1,920箱</td></tr>
+            <tr><td>5/19（月）</td><td>198</td><td style="color:#dc2626">▲ +3</td><td>2,010箱</td></tr>
+            <tr><td>5/18（日）</td><td>195</td><td style="color:#dc2626">▲ +7</td><td>1,750箱</td></tr>
+            <tr><td>5/17（土）</td><td>188</td><td style="color:#dc2626">▲ +3</td><td>2,200箱</td></tr>
+            <tr><td>5/16（金）</td><td>185</td><td style="color:#dc2626">▲ +6</td><td>2,340箱</td></tr>
+            <tr><td>5/15（木）</td><td>179</td><td style="color:#2563eb">▼ −4</td><td>2,100箱</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">大田市場 月別平均単価（過去6ヶ月）</div>
+        <table class="detail-table">
+          <thead><tr><th>月</th><th>平均単価（円/kg）</th><th>前年比</th></tr></thead>
+          <tbody>
+            <tr><td>12月</td><td>165</td><td style="color:#dc2626">▲ +12%</td></tr>
+            <tr><td>1月</td><td>180</td><td style="color:#dc2626">▲ +8%</td></tr>
+            <tr><td>2月</td><td>195</td><td style="color:#2563eb">▼ −3%</td></tr>
+            <tr><td>3月</td><td>182</td><td style="color:#dc2626">▲ +5%</td></tr>
+            <tr><td>4月</td><td>192</td><td style="color:#dc2626">▲ +9%</td></tr>
+            <tr style="background:#f0f8f0"><td><strong>5月（月中）</strong></td><td><strong>201</strong></td><td style="color:#dc2626">▲ +12%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: 気象詳細 ===== -->
+<div class="modal" id="modal-weather">
+  <div class="modal-overlay" onclick="closeModal('modal-weather')"></div>
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div>
+        <h3>🌤 気象 詳細 — AMeDAS つくば観測所</h3>
+        <div class="modal-sub">出典: 気象庁 / つくば観測所（圃場から約4km）</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-weather')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">7日間予報と病害リスク</div>
+        <table class="detail-table">
+          <thead><tr><th>日付</th><th>天気</th><th>最高</th><th>最低</th><th>湿度</th><th>降水</th><th>病害リスク</th></tr></thead>
+          <tbody>
+            <tr style="background:#f0f8f0">
+              <td><strong>5/21 今日</strong></td><td>🌥曇のち雨</td><td>25℃</td><td>18℃</td>
+              <td style="color:#dc2626;font-weight:700">83%</td><td style="color:#2563eb">午後から</td>
+              <td><span class="risk-tag risk-hi">高</span></td>
+            </tr>
+            <tr>
+              <td>5/22 明日</td><td>☁️曇り</td><td>23℃</td><td>17℃</td>
+              <td>78%</td><td>—</td>
+              <td><span class="risk-tag risk-mid">中</span></td>
+            </tr>
+            <tr>
+              <td>5/23</td><td>⛅晴れ時々曇</td><td>26℃</td><td>16℃</td>
+              <td>65%</td><td>—</td>
+              <td><span class="risk-tag risk-lo">低</span></td>
+            </tr>
+            <tr>
+              <td>5/24</td><td>☀️晴れ</td><td>28℃</td><td>17℃</td>
+              <td>55%</td><td>—</td>
+              <td><span class="risk-tag risk-lo">低</span></td>
+            </tr>
+            <tr>
+              <td>5/25</td><td>☀️晴れ</td><td>29℃</td><td>18℃</td>
+              <td>52%</td><td>—</td>
+              <td><span class="risk-tag risk-lo">低</span></td>
+            </tr>
+            <tr>
+              <td>5/26</td><td>🌤曇り</td><td>25℃</td><td>17℃</td>
+              <td>70%</td><td>—</td>
+              <td><span class="risk-tag risk-mid">中</span></td>
+            </tr>
+            <tr>
+              <td>5/27</td><td>🌧雨</td><td>22℃</td><td>16℃</td>
+              <td style="color:#dc2626;font-weight:700">85%</td><td style="color:#2563eb">終日</td>
+              <td><span class="risk-tag risk-hi">高</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="detail-source">病害リスク：湿度80%以上 かつ 気温15〜30℃ → べと病・うどんこ病リスク 高 と判定</div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">過去7日間 実測値（AMeDAS つくば）</div>
+        <table class="detail-table">
+          <thead><tr><th>日付</th><th>平均気温</th><th>最高気温</th><th>平均湿度</th><th>日照時間</th><th>降水量</th></tr></thead>
+          <tbody>
+            <tr style="background:#f0f8f0"><td><strong>5/21 今日</strong></td><td>22.1℃</td><td>24.8℃</td><td style="color:#dc2626">83%</td><td>3.2h</td><td>0.0mm</td></tr>
+            <tr><td>5/20</td><td>21.4℃</td><td>24.2℃</td><td>76%</td><td>5.8h</td><td>0.0mm</td></tr>
+            <tr><td>5/19</td><td>20.8℃</td><td>23.5℃</td><td>72%</td><td>6.4h</td><td>0.0mm</td></tr>
+            <tr><td>5/18</td><td>19.2℃</td><td>22.0℃</td><td>80%</td><td>2.1h</td><td>8.5mm</td></tr>
+            <tr><td>5/17</td><td>18.5℃</td><td>21.3℃</td><td>85%</td><td>1.4h</td><td>12.0mm</td></tr>
+            <tr><td>5/16</td><td>20.1℃</td><td>24.8℃</td><td>68%</td><td>7.2h</td><td>0.0mm</td></tr>
+            <tr><td>5/15</td><td>21.3℃</td><td>25.6℃</td><td>62%</td><td>8.5h</td><td>0.0mm</td></tr>
+          </tbody>
+        </table>
+        <div class="detail-source">平年値比：気温+2.1℃、日照−1.4h（5月平年比）</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: 病害虫詳細 ===== -->
+<div class="modal" id="modal-pest">
+  <div class="modal-overlay" onclick="closeModal('modal-pest')"></div>
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div>
+        <h3>🐛 病害虫発生予察 詳細 — 茨城県</h3>
+        <div class="modal-sub">出典: 茨城県病害虫防除所 / FAMIC農薬登録情報提供システム</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-pest')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">べと病 — <span class="badge badge-warn">注意報</span> 5/20発令</div>
+        <div class="pest-detail-block">
+          <div class="pest-detail-head">
+            <div class="pest-dot dot-red"></div>
+            べと病（Pseudoperonospora cubensis）
+          </div>
+          <div class="pest-detail-body">
+            <dl>
+              <dt>発生状況</dt>
+              <dd>茨城県内の露地きゅうりで発生を確認。高湿度・曇天が続いたことで感染が拡大中。</dd>
+              <dt>症状</dt>
+              <dd>葉の表面に黄色〜黄褐色の角ばった病斑。葉裏に灰紫色のカビ（胞子）が形成される。</dd>
+              <dt>発生しやすい条件</dt>
+              <dd>気温15〜23℃・湿度80%以上が2日以上続く環境。現在の気象条件は合致。</dd>
+              <dt>推奨防除薬（FAMIC登録済み・べと病）</dt>
+              <dd>
+                <table class="detail-table" style="margin-top:6px;">
+                  <thead><tr><th>農薬名</th><th>希釈倍数</th><th>散布間隔</th><th>最大回数</th></tr></thead>
+                  <tbody>
+                    <tr><td>ランマンフロアブル</td><td>2,000倍</td><td>7日</td><td>3回</td></tr>
+                    <tr><td>フェスティバルC水和剤</td><td>500倍</td><td>7日</td><td>3回</td></tr>
+                    <tr><td>プロポーズ顆粒水和剤</td><td>2,000倍</td><td>7日</td><td>3回</td></tr>
+                    <tr><td>ジマンダイセン水和剤</td><td>600倍</td><td>7日</td><td>5回</td></tr>
+                  </tbody>
+                </table>
+                <div class="detail-source" style="margin-top:6px;">※ 散布は雨の2時間前までに。前回散布からの間隔・収穫前日数を必ず確認。</div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">ウリハムシ — 発生注意</div>
+        <div class="pest-detail-block">
+          <div class="pest-detail-head">
+            <div class="pest-dot dot-yellow"></div>
+            ウリハムシ（Aulacophora femoralis）
+          </div>
+          <div class="pest-detail-body">
+            <dl>
+              <dt>発生状況</dt>
+              <dd>平年より10日早い発生を確認。幼苗期の食害に注意。</dd>
+              <dt>症状</dt>
+              <dd>葉に円形の食痕（穴あき）。成虫は体長7mm程度の赤橙色の甲虫。幼虫は根を食害。</dd>
+              <dt>防除のポイント</dt>
+              <dd>定植時にシルバーマルチを使用。成虫飛来初期にスピノエース顆粒水和剤（希釈5,000倍）等で防除。</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">うどんこ病 — 平年並み（経過観察）</div>
+        <div class="pest-detail-block">
+          <div class="pest-detail-head">
+            <div class="pest-dot dot-green"></div>
+            うどんこ病（Sphaerotheca fuliginea）
+          </div>
+          <div class="pest-detail-body">
+            <dl>
+              <dt>発生状況</dt>
+              <dd>現時点では平年並み。湿度が下がる時期（5月下旬〜6月）は発生が増える傾向があるため引き続き観察を。</dd>
+              <dt>症状</dt>
+              <dd>葉の表面に白い粉状のカビ。乾燥時に発生しやすい。</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">作物情報ダッシュボード</div>
@@ -915,6 +1298,23 @@
 </footer>
 
 <script>
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+
   let gpsCoords = null;
 
   function useGPS() {
