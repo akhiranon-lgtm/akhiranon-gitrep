@@ -160,10 +160,7 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    .dash-crop {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
+    .dash-crop { font-size: 1.1rem; font-weight: 700; }
     .dash-meta { font-size: .82rem; opacity: .8; }
     .dash-update { margin-left: auto; font-size: .78rem; opacity: .7; }
     .dash-tabs {
@@ -180,27 +177,53 @@
       border-bottom: 3px solid transparent;
       cursor: pointer;
     }
-    .dash-tab.active {
-      color: var(--green);
-      font-weight: 700;
-      border-bottom-color: var(--green);
-    }
+    .dash-tab.active { color: var(--green); font-weight: 700; border-bottom-color: var(--green); }
     .dash-body { padding: 20px; display: grid; gap: 16px; }
 
-    /* Today card */
-    .today-card {
-      background: var(--amber-pale);
-      border: 1px solid #f0d080;
-      border-left: 4px solid var(--amber);
+    /* Action card */
+    .action-card {
+      background: #fff;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px 20px;
+      overflow: hidden;
     }
-    .today-card h3 { font-size: .85rem; font-weight: 700; color: var(--amber); margin-bottom: 10px; }
-    .today-row { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; font-size: .95rem; }
-    .today-row strong { min-width: 72px; font-size: .82rem; color: var(--gray-mid); }
+    .action-card-header {
+      background: #f8f8f8;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--gray-mid);
+      display: flex;
+      justify-content: space-between;
+    }
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .action-item:last-child { border-bottom: none; }
+    .action-priority {
+      flex-shrink: 0;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .priority-urgent { background: #fee2e2; color: #b91c1c; }
+    .priority-check  { background: #fef9c3; color: #854d0e; }
+    .priority-ok     { background: #d1fae5; color: #065f46; }
+    .action-body { flex: 1; font-size: .9rem; line-height: 1.5; }
+    .action-body strong { display: block; margin-bottom: 2px; }
+    .action-body span { font-size: .8rem; color: var(--gray-mid); }
+
     .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: .78rem; font-weight: 700; }
     .badge-warn { background: #fee2e2; color: #b91c1c; }
-    .badge-ok { background: #d1fae5; color: #065f46; }
+    .badge-ok   { background: #d1fae5; color: #065f46; }
     .badge-info { background: #dbeafe; color: #1e40af; }
 
     /* Cards grid */
@@ -232,20 +255,52 @@
     .price-val { font-weight: 700; font-size: 1.05rem; }
     .price-up { color: #dc2626; }
     .price-dn { color: #2563eb; }
-    .mini-bar {
-      height: 6px;
-      background: #e8f2e4;
-      border-radius: 3px;
-      margin-top: 10px;
-      overflow: hidden;
+
+    /* Sparkline */
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 32px;
+      margin: 10px 0 4px;
     }
-    .mini-bar-fill { height: 100%; background: var(--green-light); border-radius: 3px; }
+    .spark-bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      background: var(--green-pale);
+      position: relative;
+    }
+    .spark-bar.today { background: var(--green-light); }
+    .spark-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .68rem;
+      color: var(--gray-light);
+    }
+
     .pest-item { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; font-size: .88rem; }
     .pest-item + .pest-item { border-top: 1px solid #f0f0f0; }
     .pest-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
-    .dot-red { background: #ef4444; }
+    .dot-red    { background: #ef4444; }
     .dot-yellow { background: #f59e0b; }
-    .dot-green { background: #22c55e; }
+    .dot-green  { background: #22c55e; }
+
+    /* 3-day forecast */
+    .forecast { display: flex; gap: 6px; margin-top: 10px; }
+    .forecast-day {
+      flex: 1;
+      text-align: center;
+      background: #f8f8f8;
+      border-radius: 6px;
+      padding: 6px 4px;
+      font-size: .78rem;
+    }
+    .forecast-day .f-label { color: var(--gray-mid); margin-bottom: 2px; }
+    .forecast-day .f-icon { font-size: 1.1rem; }
+    .forecast-day .f-temp { font-weight: 700; font-size: .82rem; }
+    .forecast-day .f-rain { color: #2563eb; font-size: .72rem; }
+    .forecast-day.today-f { background: var(--green-pale); }
+
     .weather-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: .88rem; }
     .weather-row + .weather-row { border-top: 1px solid #f0f0f0; }
 
@@ -491,14 +546,14 @@
 <section id="dashboard">
   <div class="container">
     <div class="section-label">ダッシュボード</div>
-    <h2 class="section-title">朝5分で当日の判断が終わる</h2>
-    <p class="section-sub">価格・気象・病害虫・農薬の最新情報が1画面に。変化があった項目はアラート表示。</p>
+    <h2 class="section-title">毎朝5:00更新。<br>出荷・防除・作業の判断が揃う</h2>
+    <p class="section-sub">データを見て自分で考えるのではなく、「今日何をすべきか」がそのまま出てくる。</p>
 
     <div class="dashboard">
       <div class="dash-header">
         <div class="dash-crop">きゅうり</div>
         <div class="dash-meta">茨城県つくば市｜露地栽培</div>
-        <div class="dash-update">更新: 5月21日 5:00</div>
+        <div class="dash-update">🔄 5月21日 5:00 更新</div>
       </div>
       <div class="dash-tabs">
         <div class="dash-tab active">ダッシュボード</div>
@@ -508,12 +563,33 @@
       </div>
       <div class="dash-body">
 
-        <!-- Today card -->
-        <div class="today-card">
-          <h3>今日のサマリー</h3>
-          <div class="today-row"><strong>出荷価格</strong>大田市場 210円/kg &nbsp;<span class="badge badge-info">前日比 +8円</span></div>
-          <div class="today-row"><strong>病害虫</strong><span class="badge badge-warn">べと病 注意報（茨城県）</span></div>
-          <div class="today-row"><strong>気象</strong>曇り・湿度83%・高温注意 &nbsp;<span class="badge badge-warn">病害リスク 高</span></div>
+        <!-- Action card -->
+        <div class="action-card">
+          <div class="action-card-header">
+            <span>今日の判断 — 5月21日（水）</span>
+            <span style="font-weight:400; color:var(--gray-light);">対応必要 2件 / 確認 1件</span>
+          </div>
+          <div class="action-item">
+            <span class="action-priority priority-urgent">要対応</span>
+            <div class="action-body">
+              <strong>べと病注意報 × 湿度83% → 今日中に防除薬を散布</strong>
+              <span>茨城県 5/20発令・露地きゅうり対象。午後から雨予報のため午前中に作業を。<br>推奨：ランマンフロアブル（べと病 登録あり・前回散布から14日以上経過の場合）</span>
+            </div>
+          </div>
+          <div class="action-item">
+            <span class="action-priority priority-urgent">要対応</span>
+            <div class="action-body">
+              <strong>午後13時から雨 → 収穫・出荷作業は午前中に完了を</strong>
+              <span>明日も曇りで日照不足が続く予報。収穫は今日の午前中が適期。</span>
+            </div>
+          </div>
+          <div class="action-item">
+            <span class="action-priority priority-check">確認</span>
+            <div class="action-body">
+              <strong>大田市場 210円/kg（今週最高値）→ 出荷量を増やすか検討</strong>
+              <span>先週比+18円。今週は高め推移が続いている。在庫量と相談を。</span>
+            </div>
+          </div>
         </div>
 
         <!-- Cards -->
@@ -524,36 +600,94 @@
             <div class="price-row"><span>大田市場</span><span class="price-val price-up">210 ▲</span></div>
             <div class="price-row"><span>豊洲市場</span><span class="price-val">198</span></div>
             <div class="price-row"><span>大阪中央</span><span class="price-val price-dn">185 ▼</span></div>
-            <div class="price-row"><span>仙台市場</span><span class="price-val">204</span></div>
-            <div class="mini-bar"><div class="mini-bar-fill" style="width:72%"></div></div>
-            <div style="font-size:.75rem; color:var(--gray-light); margin-top:4px;">過去6ヶ月平均比 +12%</div>
+            <div class="price-row"><span>仙台中央</span><span class="price-val">204</span></div>
+            <div class="sparkline" title="大田市場 過去7日">
+              <div class="spark-bar" style="height:52%"></div>
+              <div class="spark-bar" style="height:60%"></div>
+              <div class="spark-bar" style="height:55%"></div>
+              <div class="spark-bar" style="height:68%"></div>
+              <div class="spark-bar" style="height:74%"></div>
+              <div class="spark-bar" style="height:70%"></div>
+              <div class="spark-bar today" style="height:82%"></div>
+            </div>
+            <div class="spark-labels"><span>7日前</span><span>今日</span></div>
+            <div style="font-size:.75rem; color:var(--gray-light); margin-top:4px;">大田市場 過去6ヶ月平均比 +12%</div>
           </div>
 
           <!-- Weather -->
           <div class="card">
             <div class="card-title"><span class="icon">🌤</span>気象（AMeDAS つくば）</div>
             <div class="weather-row"><span>気温</span><strong>24.8℃</strong><span style="font-size:.78rem;color:var(--gray-light)">平年+2.1℃</span></div>
-            <div class="weather-row"><span>湿度</span><strong style="color:#dc2626">83%</strong><span style="font-size:.78rem;color:#dc2626">高め</span></div>
+            <div class="weather-row"><span>湿度</span><strong style="color:#dc2626">83%</strong><span style="font-size:.78rem;color:#dc2626">↑ 高め</span></div>
             <div class="weather-row"><span>日照</span><strong>3.2時間</strong><span style="font-size:.78rem;color:var(--gray-light)">平年−1.4h</span></div>
-            <div class="weather-row"><span>降水</span><strong>0.0mm</strong><span></span></div>
-            <div class="mini-bar" style="background:#fee2e2;"><div class="mini-bar-fill" style="width:83%;background:#ef4444"></div></div>
-            <div style="font-size:.75rem; color:#dc2626; margin-top:4px;">湿度ベース病害リスク：高</div>
+            <div class="weather-row"><span>降水</span><strong>0.0mm</strong><span style="font-size:.78rem;color:#2563eb">午後から雨</span></div>
+            <div class="forecast">
+              <div class="forecast-day today-f">
+                <div class="f-label">今日</div>
+                <div class="f-icon">🌥</div>
+                <div class="f-temp">25℃</div>
+                <div class="f-rain">🌧 午後</div>
+              </div>
+              <div class="forecast-day">
+                <div class="f-label">明日</div>
+                <div class="f-icon">☁️</div>
+                <div class="f-temp">23℃</div>
+                <div class="f-rain">曇り</div>
+              </div>
+              <div class="forecast-day">
+                <div class="f-label">明後日</div>
+                <div class="f-icon">⛅</div>
+                <div class="f-temp">26℃</div>
+                <div class="f-rain" style="color:var(--gray-light)">晴れ</div>
+              </div>
+            </div>
           </div>
 
           <!-- Pest -->
           <div class="card">
             <div class="card-title"><span class="icon">🐛</span>病害虫発生予察（茨城県）</div>
-            <div class="pest-item"><div class="pest-dot dot-red"></div><div><strong>べと病</strong>　注意報 5/20発令<br><span style="font-size:.78rem;color:var(--gray-light)">露地きゅうり対象</span></div></div>
-            <div class="pest-item"><div class="pest-dot dot-yellow"></div><div><strong>ウリハムシ</strong>　発生注意<br><span style="font-size:.78rem;color:var(--gray-light)">平年より10日早い</span></div></div>
-            <div class="pest-item"><div class="pest-dot dot-green"></div><div><strong>うどんこ病</strong>　平年並み<br><span style="font-size:.78rem;color:var(--gray-light)">経過観察</span></div></div>
+            <div class="pest-item">
+              <div class="pest-dot dot-red"></div>
+              <div>
+                <strong>べと病</strong>　<span class="badge badge-warn">注意報</span> 5/20発令<br>
+                <span style="font-size:.78rem;color:var(--gray-light)">露地きゅうり対象</span><br>
+                <span style="font-size:.78rem;color:var(--green)">→ ランマン・プロポーズ等で防除を</span>
+              </div>
+            </div>
+            <div class="pest-item">
+              <div class="pest-dot dot-yellow"></div>
+              <div>
+                <strong>ウリハムシ</strong>　発生注意<br>
+                <span style="font-size:.78rem;color:var(--gray-light)">平年より10日早い・幼苗期注意</span>
+              </div>
+            </div>
+            <div class="pest-item">
+              <div class="pest-dot dot-green"></div>
+              <div>
+                <strong>うどんこ病</strong>　平年並み<br>
+                <span style="font-size:.78rem;color:var(--gray-light)">経過観察</span>
+              </div>
+            </div>
           </div>
 
           <!-- Pesticide alert -->
           <div class="card">
-            <div class="card-title"><span class="icon">🧪</span>登録農薬 最新情報</div>
-            <div class="pest-item"><div class="pest-dot dot-green"></div><div><strong>適用拡大</strong>　5/15<br><span style="font-size:.78rem;color:var(--gray-light)">〇〇水和剤 べと病に追加</span></div></div>
-            <div class="pest-item"><div class="pest-dot dot-yellow"></div><div><strong>失効予告</strong>　6/30<br><span style="font-size:.78rem;color:var(--gray-light)">△△乳剤 在庫確認を</span></div></div>
-            <div style="font-size:.75rem; color:var(--gray-light); margin-top:10px;">出典: FAMIC農薬登録情報提供システム</div>
+            <div class="card-title"><span class="icon">🧪</span>農薬登録 最新情報</div>
+            <div class="pest-item">
+              <div class="pest-dot dot-green"></div>
+              <div>
+                <strong>適用拡大</strong>　5/15 登録<br>
+                <span style="font-size:.78rem;color:var(--gray-light)">フェスティバルC水和剤 べと病に追加<br>登録番号 第〇〇〇〇〇号</span>
+              </div>
+            </div>
+            <div class="pest-item">
+              <div class="pest-dot dot-yellow"></div>
+              <div>
+                <strong>失効予告</strong>　6/30<br>
+                <span style="font-size:.78rem;color:var(--gray-light)">サンマイト水和剤 登録失効予定<br>在庫の使い切りを確認</span>
+              </div>
+            </div>
+            <div style="font-size:.75rem; color:var(--gray-light); margin-top:10px;">出典: FAMIC 農薬登録情報提供システム</div>
           </div>
         </div>
 
