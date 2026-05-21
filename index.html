@@ -342,24 +342,93 @@
       font-weight: 700;
       margin-bottom: 16px;
     }
-    .form-inline { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
-    .form-inline select, .form-inline input {
-      padding: 11px 14px;
-      border: none;
+    .reg-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .reg-field { margin-bottom: 16px; }
+    .reg-label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--gray-mid);
+      margin-bottom: 6px;
+    }
+    .reg-row { display: flex; gap: 8px; }
+    .reg-row select, .reg-row input {
+      flex: 1;
+      padding: 11px 12px;
+      border: 1.5px solid var(--border);
       border-radius: var(--radius);
       font-size: .95rem;
-      min-width: 160px;
+      font-family: inherit;
+      color: var(--gray-dark);
     }
-    .form-inline select:focus, .form-inline input:focus { outline: 2px solid var(--amber); }
+    .reg-row select:focus, .reg-row input:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .reg-or {
+      text-align: center;
+      font-size: .8rem;
+      color: var(--gray-light);
+      margin: 10px 0;
+      position: relative;
+    }
+    .reg-or::before, .reg-or::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: var(--border);
+    }
+    .reg-or::before { left: 0; }
+    .reg-or::after { right: 0; }
+    .gps-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      font-size: .92rem;
+      font-family: inherit;
+      color: var(--gray-mid);
+      cursor: pointer;
+    }
+    .gps-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-pale); }
+    .gps-btn.active { border-color: var(--green); color: var(--green); background: var(--green-pale); font-weight: 700; }
+    .reg-select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: .95rem;
+      font-family: inherit;
+      color: var(--gray-dark);
+      background: #fff;
+    }
+    .reg-select:focus { outline: none; border-color: var(--green); }
     .form-btn {
+      width: 100%;
       background: var(--amber);
       color: #fff;
       border: none;
       border-radius: var(--radius);
-      padding: 11px 28px;
+      padding: 14px;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
+      margin-top: 4px;
+      font-family: inherit;
     }
     .form-btn:hover { background: #b56d0f; }
 
@@ -409,13 +478,13 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-tag">生産者向け 無料サービス</div>
-  <h1>あなたの<em>作物と地域</em>に必要な<br>情報が、1画面に揃う</h1>
-  <p>価格・気象・病害虫・農薬登録・品種情報を毎日自動更新。<br>きゅうり農家なら「きゅうり」だけを登録すれば、あとは全部自動。</p>
+  <h1>栽培している作物の<br><em>最新情報が、これでわかる</em></h1>
+  <p>価格・気象・病害虫・農薬登録・品種情報を毎日自動更新。<br>作物と地域を登録するだけで、必要な情報が自動で届く。</p>
   <div class="hero-actions">
     <button class="btn-primary" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">今すぐ無料で始める</button>
     <button class="btn-ghost" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">画面を見る</button>
   </div>
-  <p class="hero-note">クレジットカード不要・登録3項目だけ</p>
+  <p class="hero-note">無料・登録3項目だけ</p>
 </div>
 
 <!-- DASHBOARD PREVIEW -->
@@ -661,23 +730,45 @@
     <div class="free-banner">
       <div class="free-badge">生産者は永久無料</div>
       <h2>今すぐ使い始める</h2>
-      <p>まずはきゅうり・茨城から。1作物・1地域に完全特化してスタートします。</p>
-      <form class="form-inline" onsubmit="handleRegister(event)">
-        <select>
-          <option value="">都道府県を選択</option>
-          <option>茨城県</option>
-          <option>千葉県</option>
-          <option>群馬県</option>
-          <option>宮崎県</option>
-          <option>高知県</option>
-        </select>
-        <select>
-          <option value="">作物を選択</option>
-          <option>きゅうり（先行対応）</option>
-        </select>
-        <button type="submit" class="form-btn">無料で登録する</button>
-      </form>
-      <p style="font-size:.8rem;opacity:.7;margin-top:16px;">クレジットカード不要。メールアドレスのみで登録できます。</p>
+      <p>作物と地域を登録するだけ。あなたの圃場に必要な最新情報が自動で揃います。</p>
+
+      <div class="reg-card">
+        <form onsubmit="handleRegister(event)">
+
+          <!-- Location -->
+          <div class="reg-field">
+            <label class="reg-label">栽培地域</label>
+            <div class="reg-row" id="manual-location">
+              <select id="pref" style="max-width:160px;">
+                <option value="">都道府県</option>
+                <option>茨城県</option>
+                <option>千葉県</option>
+                <option>群馬県</option>
+                <option>宮崎県</option>
+                <option>高知県</option>
+                <option>その他</option>
+              </select>
+              <input type="text" id="city" placeholder="市区町村（例：つくば市）">
+            </div>
+            <div class="reg-or">または</div>
+            <button type="button" class="gps-btn" id="gps-btn" onclick="useGPS()">
+              <span>📍</span> 現在地（GPS）を使う
+            </button>
+            <div id="gps-result" style="font-size:.82rem;color:var(--green);margin-top:6px;display:none;"></div>
+          </div>
+
+          <!-- Crop -->
+          <div class="reg-field">
+            <label class="reg-label">栽培作物</label>
+            <select class="reg-select" id="crop">
+              <option value="">作物を選択してください</option>
+              <option>きゅうり（先行対応）</option>
+            </select>
+          </div>
+
+          <button type="submit" class="form-btn">無料で登録する</button>
+        </form>
+      </div>
     </div>
   </div>
 </section>
@@ -690,8 +781,50 @@
 </footer>
 
 <script>
+  let gpsCoords = null;
+
+  function useGPS() {
+    const btn = document.getElementById('gps-btn');
+    const result = document.getElementById('gps-result');
+    if (!navigator.geolocation) {
+      result.textContent = 'このブラウザはGPSに対応していません。';
+      result.style.color = '#dc2626';
+      result.style.display = 'block';
+      return;
+    }
+    btn.textContent = '📍 取得中...';
+    btn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        gpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        btn.classList.add('active');
+        btn.innerHTML = '<span>✅</span> 現在地を取得しました';
+        btn.disabled = false;
+        result.textContent = `緯度 ${gpsCoords.lat.toFixed(4)} / 経度 ${gpsCoords.lng.toFixed(4)}`;
+        result.style.color = 'var(--green)';
+        result.style.display = 'block';
+        document.getElementById('pref').value = '';
+        document.getElementById('city').value = '';
+      },
+      () => {
+        btn.innerHTML = '<span>📍</span> 現在地（GPS）を使う';
+        btn.disabled = false;
+        result.textContent = '位置情報の取得に失敗しました。手動で入力してください。';
+        result.style.color = '#dc2626';
+        result.style.display = 'block';
+      }
+    );
+  }
+
   function handleRegister(e) {
     e.preventDefault();
+    const crop = document.getElementById('crop').value;
+    const pref = document.getElementById('pref').value;
+    const city = document.getElementById('city').value.trim();
+    if (!crop) { alert('作物を選択してください。'); return; }
+    if (!gpsCoords && (!pref || !city)) {
+      alert('都道府県と市区町村を入力するか、GPSで現在地を取得してください。'); return;
+    }
     alert('ご登録ありがとうございます。\nサービス開始時にメールでお知らせします。\n（現在 先行登録受付中）');
   }
 
